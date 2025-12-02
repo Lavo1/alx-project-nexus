@@ -6,7 +6,7 @@ export default function Header() {
     <header className="w-full bg-white border-b border-gray-200 py-4 px-6 flex items-center">
       <Link href="/">
         <Image
-          src="/logo.png"          // make sure this matches your file name
+          src="/logo.png"          
           alt="Job Placement Logo"
           width={120}
           height={40}
