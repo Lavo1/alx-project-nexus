@@ -1,15 +1,12 @@
-import { API } from "./api";
+import { apiPost } from "./api";
 
-export async function login(username: string, password: string) {
-  const res = await fetch(`${API}/api/auth/login/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
-
-  if (!res.ok) {
-    throw new Error("Login failed");
+export async function apiLogin(email: string, password: string) {
+  try {
+    return await apiPost("/api/auth/login/", {
+      email,
+      password,
+    });
+  } catch (error) {
+    return { ok: false };
   }
-
-  return res.json(); // { access, refresh }
 }

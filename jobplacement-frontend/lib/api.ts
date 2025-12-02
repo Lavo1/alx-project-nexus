@@ -1,30 +1,15 @@
-// lib/api.ts
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000";
-
-export async function apiFetch(
-  endpoint: string,
-  options: RequestInit = {}
-) {
-  const res = await fetch(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
+export async function apiPost(path: string, body: any) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
   });
 
-  if (!res.ok) {
-    throw new Error(`API error: ${res.status}`);
-  }
-
-  return res.json();
+  return { ok: res.ok, data: await res.json().catch(() => null) };
 }
 
-export async function apiGet(endpoint: string) {
-  return apiFetch(endpoint, { method: "GET" });
-}
+export async function apiGet(path: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`);
 
-export const API = {
-  get: apiGet,
-  fetch: apiFetch,
-};
+  return { ok: res.ok, data: await res.json().catch(() => null) };
+}

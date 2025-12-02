@@ -1,18 +1,19 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="w-full bg-white shadow-md px-6 py-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
+    <header className="w-full bg-white border-b border-gray-200 py-4 px-6 flex items-center">
+      <Link href="/">
         <Image
-          src="/logo.png"
-          alt="JobPlacement Logo"
-          width={60}
-          height={60}
+          src="/logo.png"          // make sure this matches your file name
+          alt="Job Placement Logo"
+          width={120}
+          height={40}
           priority
         />
-        <h1 className="text-2xl font-bold text-gray-800">JobPlacement.com</h1>
-      </div>
+      </Link>
     </header>
   );
 }
+
