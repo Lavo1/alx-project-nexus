@@ -1,57 +1,59 @@
+// app/login/page.tsx
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { login } from "@/lib/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const router = useRouter();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      await login(username, password);
+      // redirect to jobs list after login
+      router.push("/jobs");
+    } catch (err: any) {
+      setError(err?.detail || err?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md bg-white shadow-md rounded-xl p-8 border border-gray-200">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
-          Login
-        </h1>
-
-        {/* Email */}
-        <label className="block mb-4">
-          <span className="text-gray-700 font-medium">Email</span>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-green-300"
-            placeholder="Enter your email"
-          />
-        </label>
-
-        {/* Password */}
-        <label className="block mb-6">
-          <span className="text-gray-700 font-medium">Password</span>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-green-300"
-            placeholder="Enter your password"
-          />
-        </label>
-
-        {/* Button */}
+    <div className="mx-auto max-w-md rounded bg-white p-6 shadow">
+      <h1 className="mb-4 text-2xl font-semibold">Sign in</h1>
+      {error && <div className="mb-3 rounded bg-red-100 p-2 text-sm text-red-700">{error}</div>}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username or email"
+          className="rounded border px-3 py-2"
+        />
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          type="password"
+          className="rounded border px-3 py-2"
+        />
         <button
-          className="w-full py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
+          type="submit"
+          className="mt-2 rounded bg-emerald-600 px-4 py-2 text-white disabled:opacity-60"
+          disabled={loading}
         >
-          Sign In
+          {loading ? "Signing in..." : "Sign in"}
         </button>
-
-        {/* Links */}
-        <div className="text-center mt-4 text-sm text-gray-600">
-          Don’t have an account?{" "}
-          <a href="/register" className="text-green-700 hover:underline">
-            Register
-          </a>
-        </div>
-      </div>
+      </form>
     </div>
   );
 }
