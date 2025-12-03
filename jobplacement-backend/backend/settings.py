@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +22,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7_6ay3ihy1ea=%a(=86y(5t=j9-8vy%2v0r(&cq)n4rkg70_gf'
+# Read secret key from environment for production. Falling back to the
+# existing value for local development only.
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY', 'django-insecure-7_6ay3ihy1ea=%a(=86y(5t=j9-8vy%2v0r(&cq)n4rkg70_gf'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Toggle with the DEBUG env var (set to 'False' in production)
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+# Hosts allowed to serve the app. Provide a comma-separated list via env.
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 
 # Application definition
@@ -55,6 +63,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -87,12 +96,18 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+DATABASES = {}
+
+# Use DATABASE_URL environment variable (Parseable by dj-database-url) if set,
+# otherwise fall back to the local sqlite file for development.
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+else:
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
 
 
 # Password validation
@@ -130,16 +145,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+# Directory where `collectstatic` will place production static files
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Enable WhiteNoise static file storage for compressed/static assets in prod
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Development CORS / hosts settings
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
-
-# Allow all origins during local development. For production, restrict this.
-CORS_ALLOW_ALL_ORIGINS = True
+# Allow all origins during local development. For production, restrict this
+# by setting CORS_ALLOW_ALL_ORIGINS to 'False' and providing
+# CORS_ALLOWED_ORIGINS as a comma-separated list in the environment.
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True') == 'True'
+if not CORS_ALLOW_ALL_ORIGINS:
+    cors_allowed = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+    CORS_ALLOWED_ORIGINS = [o.strip() for o in cors_allowed.split(',') if o.strip()]
 
 
