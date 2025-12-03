@@ -31,12 +31,12 @@ export default function ApplicationFormPage() {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 mt-10 rounded-xl shadow-md">
-      <h1 className="text-2xl font-semibold mb-6">Apply for this Job</h1>
+      <h1 className="text-2xl font-bold text-black mb-6">Apply for this Job</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Full Name */}
         <div>
-          <label className="block font-medium mb-1">Full Name</label>
+          <label className="block font-bold text-black mb-1">Full Name</label>
           <input
             type="text"
             name="fullName"
@@ -48,7 +48,7 @@ export default function ApplicationFormPage() {
 
         {/* Email */}
         <div>
-          <label className="block font-medium mb-1">Email Address</label>
+          <label className="block font-bold text-black mb-1">Email Address</label>
           <input
             type="email"
             name="email"
@@ -60,7 +60,7 @@ export default function ApplicationFormPage() {
 
         {/* Phone */}
         <div>
-          <label className="block font-medium mb-1">Phone Number</label>
+          <label className="block font-bold text-black mb-1">Phone Number</label>
           <input
             type="text"
             name="phone"
@@ -72,7 +72,7 @@ export default function ApplicationFormPage() {
 
         {/* Resume Upload */}
         <div>
-          <label className="block font-medium mb-1">Upload Resume</label>
+          <label className="block font-bold text-black mb-1">Upload Resume</label>
           <input
             type="file"
             accept=".pdf,.doc,.docx"
@@ -84,7 +84,7 @@ export default function ApplicationFormPage() {
 
         {/* Cover Letter */}
         <div>
-          <label className="block font-medium mb-1">Cover Letter (optional)</label>
+          <label className="block font-bold text-black mb-1">Cover Letter (optional)</label>
           <textarea
             name="coverLetter"
             rows={5}

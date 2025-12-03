@@ -30,21 +30,21 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md rounded bg-white p-6 shadow">
-      <h1 className="mb-4 text-2xl font-semibold">Sign in</h1>
+      <h1 className="mb-4 text-2xl font-bold text-black">Sign in</h1>
       {error && <div className="mb-3 rounded bg-red-100 p-2 text-sm text-red-700">{error}</div>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username or email"
-          className="rounded border px-3 py-2"
+          className="rounded border px-3 py-2 text-black font-bold"
         />
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           type="password"
-          className="rounded border px-3 py-2"
+          className="rounded border px-3 py-2 text-black font-bold"
         />
         <button
           type="submit"
