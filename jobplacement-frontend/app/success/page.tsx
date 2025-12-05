@@ -7,8 +7,7 @@ export default function SuccessPage() {
         </h1>
 
         <p className="text-gray-700 mb-6">
-          Your application has been successfully sent. Our team or the employer
-          will review it if successful contact you.
+          Look at you! our big star, well done.!!!
         </p>
 
         <a
